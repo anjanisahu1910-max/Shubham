@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memories 📷</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f8f9fa, #ffe6f0);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #fff, #fef7f7);
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(214, 51, 108, 0.1);
+      text-align: center;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: #d6336c;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(214, 51, 108, 0.2);
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #d6336c, #b32555);
+      border: none;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(214, 51, 108, 0.3);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-50%) translateY(-2px);
+      box-shadow: 0 6px 20px rgba(214, 51, 108, 0.4);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Main message */
+    .main-message {
+      text-align: center;
+      margin-bottom: 50px;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(214, 51, 108, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .main-message h2 {
+      font-size: 2.2rem;
+      color: #d6336c;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+
+    .main-message p {
+      font-size: 1.3rem;
+      color: #666;
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Gallery Grid */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .photo-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(214, 51, 108, 0.2);
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 15px;
+      transition: all 0.4s ease;
+    }
+
+    .photo-card:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Masonry layout for varied sizes */
+    .gallery-masonry {
+      columns: 3;
+      column-gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .gallery-masonry .photo-card {
+      break-inside: avoid;
+      margin-bottom: 30px;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .gallery-masonry .photo-card img {
+      height: auto;
+      min-height: 200px;
+      max-height: 400px;
+    }
+
+    /* Family Section */
+    .family-section {
+      margin: 60px 0;
+      padding: 50px 30px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(214, 51, 108, 0.05));
+      border-radius: 30px;
+      box-shadow: 0 15px 40px rgba(214, 51, 108, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(214, 51, 108, 0.1);
+    }
+
+    .family-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .family-header h2 {
+      font-size: 2.5rem;
+      color: #d6336c;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 4px rgba(214, 51, 108, 0.2);
+    }
+
+    .family-photo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .family-photo-card {
+      position: relative;
+      max-width: 600px;
+      width: 100%;
+      background: #fff;
+      border-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(214, 51, 108, 0.15);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      overflow: hidden;
+    }
+
+    .family-photo-card:hover {
+      transform: translateY(-15px) scale(1.03);
+      box-shadow: 0 30px 80px rgba(214, 51, 108, 0.25);
+    }
+
+    .family-photo-card img {
+      width: 100%;
+      height: auto;
+      min-height: 400px;
+      object-fit: cover;
+      border-radius: 20px;
+      transition: all 0.4s ease;
+    }
+
+    .family-photo-card:hover img {
+      transform: scale(1.05);
+    }
+
+
+
+    .family-message {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(214, 51, 108, 0.1);
+    }
+
+    .family-message p {
+      font-size: 1.2rem;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      padding: 0 20px;
+    }
+
+    .family-message p:first-child {
+      color: #d6336c;
+      font-weight: 600;
+      font-size: 1.3rem;
+    }
+
+    .family-message p:last-child {
+      color: #d6336c;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.25rem;
+      margin-top: 25px;
+      margin-bottom: 0;
+    }
+
+    /* Friends Section */
+    .friends-section {
+      margin: 60px 0;
+      padding: 50px 30px;
+      background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(41, 128, 185, 0.1));
+      border-radius: 30px;
+      box-shadow: 0 15px 40px rgba(52, 152, 219, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(52, 152, 219, 0.1);
+    }
+
+    .friends-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .friends-header h2 {
+      font-size: 2.5rem;
+      color: #3498db;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+    }
+
+    .friends-photo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .friends-photo-card {
+      position: relative;
+      max-width: 500px;
+      width: 100%;
+      background: #fff;
+      border-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(52, 152, 219, 0.15);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      overflow: hidden;
+    }
+
+    .friends-photo-card:hover {
+      transform: translateY(-15px) scale(1.03);
+      box-shadow: 0 30px 80px rgba(52, 152, 219, 0.25);
+    }
+
+    .friends-photo-card img {
+      width: 100%;
+      height: auto;
+      min-height: 350px;
+      object-fit: cover;
+      border-radius: 20px;
+      transition: all 0.4s ease;
+    }
+
+    .friends-photo-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .friends-message {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(52, 152, 219, 0.1);
+    }
+
+    .friends-message p {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    .friends-message p:first-child {
+      color: #3498db;
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .friends-message p:last-child {
+      color: #3498db;
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-top: 25px;
+      margin-bottom: 0;
+    }
+
+    .friends-message p:nth-child(2), .friends-message p:nth-child(4) {
+      color: #e74c3c;
+      font-weight: 600;
+    }
+
+    /* Video Section */
+    .video-section {
+      margin: 60px 0;
+      padding: 50px 30px;
+      background: linear-gradient(135deg, rgba(155, 89, 182, 0.05), rgba(142, 68, 173, 0.1));
+      border-radius: 30px;
+      box-shadow: 0 15px 40px rgba(155, 89, 182, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(155, 89, 182, 0.1);
+    }
+
+    .video-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .video-header h2 {
+      font-size: 2.5rem;
+      color: #9b59b6;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 4px rgba(155, 89, 182, 0.2);
+    }
+
+    .video-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .video-card {
+      position: relative;
+      max-width: 700px;
+      width: 100%;
+      background: #fff;
+      border-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(155, 89, 182, 0.15);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      overflow: hidden;
+    }
+
+    .video-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 80px rgba(155, 89, 182, 0.25);
+    }
+
+    .video-card video {
+      width: 100%;
+      height: auto;
+      min-height: 300px;
+      border-radius: 20px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .video-card:hover video {
+      transform: scale(1.02);
+    }
+
+    /* Custom video controls styling */
+    .video-card video::-webkit-media-controls-panel {
+      /* background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(142, 68, 173, 0.9)); */
+    }
+
+    .video-card video::-webkit-media-controls-play-button {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+    }
+
+    .video-message {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(155, 89, 182, 0.1);
+    }
+
+    .video-message p {
+      font-size: 1.3rem;
+      color: #2c3e50;
+      line-height: 1.8;
+      margin-bottom: 18px;
+      font-weight: 500;
+    }
+
+    .video-message p:first-child {
+      /* color: #9b59b6; */
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-bottom: 25px;
+    }
+
+    .video-message p:nth-child(2) {
+      color: #e74c3c;
+      font-weight: 600;
+      font-style: italic;
+    }
+
+    .video-message p:nth-child(4) {
+      /* color: #9b59b6; */
+      font-weight: 600;
+    }
+
+    .video-message p:nth-child(5) {
+      color: #e91e63;
+      font-weight: 700;
+      font-size: 1.35rem;
+    }
+
+    .video-message p:last-child {
+      /* color: #9b59b6; */
+      font-weight: 700;
+      font-size: 1.35rem;
+      margin-bottom: 0;
+      font-style: italic;
+    }
+
+    /* College Friends Video Section */
+    .college-video-section {
+      margin: 60px 0;
+      padding: 50px 30px;
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.05), rgba(39, 174, 96, 0.1));
+      border-radius: 30px;
+      box-shadow: 0 15px 40px rgba(46, 204, 113, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(46, 204, 113, 0.1);
+    }
+
+    .college-video-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .college-video-header h2 {
+      font-size: 2.5rem;
+      color: #27ae60;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+    }
+
+    .college-video-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .college-video-card {
+      position: relative;
+      max-width: 750px;
+      width: 100%;
+      background: #fff;
+      border-radius: 25px;
+      padding: 20px;
+      box-shadow: 0 20px 60px rgba(46, 204, 113, 0.15);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      overflow: hidden;
+    }
+
+    .college-video-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 30px 80px rgba(46, 204, 113, 0.25);
+    }
+
+    .college-video-card video {
+      width: 100%;
+      height: auto;
+      min-height: 350px;
+      border-radius: 20px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .college-video-card:hover video {
+      transform: scale(1.02);
+    }
+
+    /* Custom video controls styling */
+    .college-video-card video::-webkit-media-controls-panel {
+      /* background: linear-gradient(135deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9)); */
+    }
+
+    .college-video-card video::-webkit-media-controls-play-button {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+    }
+
+    .college-video-message {
+      max-width: 850px;
+      margin: 0 auto;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(46, 204, 113, 0.1);
+    }
+
+    .college-video-message p {
+      font-size: 1.25rem;
+      color: #2c3e50;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .college-video-message p:first-child {
+      
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .college-video-message p:nth-child(2) {
+      color: #e74c3c;
+      font-weight: 600;
+      font-style: italic;
+    }
+
+    .college-video-message p:nth-child(3) {
+      color: #f39c12;
+      font-weight: 600;
+    }
+
+    .college-video-message p:nth-child(4) {
+     
+      font-weight: 600;
+      font-style: italic;
+    }
+
+    .college-video-message p:nth-child(6) {
+      color: #e91e63;
+      font-weight: 600;
+    }
+
+    .college-video-message p:nth-child(8) {
+     
+      font-weight: 700;
+      font-size: 1.3rem;
+    }
+
+    .college-video-message p:nth-child(9) {
+    
+      font-weight: 600;
+      font-style: italic;
+    }
+
+    .college-video-message p:last-child {
+    
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 0;
+      font-style: italic;
+    }
+
+    /* Bottom message */
+    .bottom-message {
+      text-align: center;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(214, 51, 108, 0.1), rgba(255, 230, 240, 0.8));
+      border-radius: 25px;
+      margin: 50px 0;
+      box-shadow: 0 8px 32px rgba(214, 51, 108, 0.1);
+    }
+
+    .bottom-message p {
+      font-size: 1.4rem;
+      color: #d6336c;
+      font-weight: 600;
+      line-height: 1.6;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Overlay for zoomed images */
+    .img-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+    }
+
+    .img-overlay.show {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .img-overlay img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 15px;
+      box-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+      animation: zoomIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      background: rgba(214, 51, 108, 0.8);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .close-btn:hover {
+      background: rgba(214, 51, 108, 1);
+      transform: scale(1.1);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      background: linear-gradient(135deg, #fff, #fef7f7);
+      color: #666;
+      font-size: 1.1rem;
+      box-shadow: 0 -4px 20px rgba(214, 51, 108, 0.1);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes zoomIn {
+      from { 
+        transform: scale(0.5) rotate(-5deg);
+        opacity: 0;
+      }
+      to { 
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .gallery-masonry {
+        columns: 2;
+      }
+      
+      .main-message h2 {
+        font-size: 1.8rem;
+      }
+      
+      .main-message p {
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2rem;
+      }
+      
+      .back-btn {
+        position: static;
+        transform: none;
+        margin-bottom: 20px;
+      }
+      
+      .gallery-masonry {
+        columns: 1;
+      }
+      
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        padding: 20px 15px;
+      }
+      
+      .main-message {
+        padding: 20px;
+        margin-bottom: 30px;
+      }
+      
+      .main-message h2 {
+        font-size: 1.5rem;
+      }
+      
+      .main-message p {
+        font-size: 1rem;
+      }
+      
+      .family-section {
+        margin: 40px 0;
+        padding: 30px 20px;
+      }
+      
+      .family-header h2 {
+        font-size: 2rem;
+      }
+      
+      .family-message {
+        padding: 20px;
+      }
+      
+      .family-message p {
+        font-size: 1.1rem;
+        padding: 0 10px;
+      }
+      
+      .family-photo-card {
+        max-width: 100%;
+        padding: 15px;
+      }
+      
+      .family-photo-card img {
+        min-height: 300px;
+      }
+      
+      .friends-section {
+        margin: 40px 0;
+        padding: 30px 20px;
+      }
+      
+      .friends-header h2 {
+        font-size: 2rem;
+      }
+      
+      .friends-message {
+        padding: 25px 20px;
+      }
+      
+      .friends-message p {
+        font-size: 1.1rem;
+        padding: 0 10px;
+      }
+      
+      .friends-photo-card {
+        max-width: 100%;
+        padding: 15px;
+      }
+      
+      .friends-photo-card img {
+        min-height: 280px;
+      }
+      
+      .video-section {
+        margin: 40px 0;
+        padding: 30px 20px;
+      }
+      
+      .video-header h2 {
+        font-size: 2rem;
+      }
+      
+      .video-message {
+        padding: 25px 20px;
+      }
+      
+      .video-message p {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+      }
+      
+      .video-card {
+        max-width: 100%;
+        padding: 15px;
+      }
+      
+      .video-card video {
+        min-height: 250px;
+      }
+      
+      .college-video-section {
+        margin: 40px 0;
+        padding: 30px 20px;
+      }
+      
+      .college-video-header h2 {
+        font-size: 2rem;
+      }
+      
+      .college-video-message {
+        padding: 30px 20px;
+      }
+      
+      .college-video-message p {
+        font-size: 1.1rem;
+        margin-bottom: 14px;
+      }
+      
+      .college-video-card {
+        max-width: 100%;
+        padding: 15px;
+      }
+      
+      .college-video-card video {
+        min-height: 280px;
+      }
+      
+      .bottom-message p {
+        font-size: 1.2rem;
+      }
+      
+      .close-btn {
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 30px;
+      }
+    }
+
+    /* Next Button Styling */
+    .next-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      border: none;
+      color: #fff;
+      padding: 15px 25px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 25px rgba(231, 76, 60, 0.3);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .next-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 30px rgba(231, 76, 60, 0.4);
+      background: linear-gradient(135deg, #c0392b, #a93226);
+    }
+
+    .next-btn:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+
+    .next-btn::after {
+      content: '→';
+      font-size: 18px;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+
+    .next-btn:hover::after {
+      transform: translateX(3px);
+    }
+    @media (max-width: 480px) {
+      .photo-card {
+        padding: 10px;
+      }
+      
+      .photo-card img {
+        height: 200px;
+      }
+      
+      .family-message p {
+        font-size: 1rem;
+      }
+      
+      .img-overlay img {
+        max-width: 95%;
+        max-height: 85%;
+      }
+      
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <button class="back-btn" onclick="window.location.href='second.html'">← Back</button>
+    <h1>Beautiful Memories 📷</h1>
+  </header>
+
+  <div class="container">
+    <!-- Main Message -->
+    <div class="main-message">
+      <h2>Look how little you were… and still the cutest human alive 🥹💛</h2>
+      <p>From this little smile to the incredible person you are today—every moment of your journey is pure magic ✨</p>
+    </div>
+
+    <!-- Photo Gallery -->
+    <div class="gallery-masonry">
+      <div class="photo-card" data-image="photos/c1.jpg">
+        <img src="photos/c1.jpg" alt="Beautiful Memory 1" loading="lazy">
+      </div>
+      
+      <div class="photo-card" data-image="photos/c4.jpg">
+        <img src="photos/c4.jpg" alt="Beautiful Memory 2" loading="lazy">
+      </div>
+      
+      <div class="photo-card" data-image="photos/c3.jpg">
+        <img src="photos/ee2.jpg" alt="Beautiful Memory 3" loading="lazy">
+      </div>
+      
+      <div class="photo-card" data-image="photos/c2.jpg">
+        <img src="photos/c2.jpg" alt="Beautiful Memory 4" loading="lazy">
+      </div>
+      
+      <div class="photo-card" data-image="photos/c5.jpg">
+        <img src="photos/c5.jpg" alt="Beautiful Memory 5" loading="lazy">
+      </div>
+      
+      <div class="photo-card" data-image="photos/c6.jpg">
+        <img src="photos/c6.jpg" alt="Beautiful Memory 6" loading="lazy">
+      </div>
+    </div>
+
+    <!-- Family Section -->
+    <div class="family-section">
+      <div class="family-header">
+        <h2>Your Beautiful Family 👨‍👩‍👧‍👦</h2>
+      </div>
+      
+      <div class="family-photo-container">
+        <div class="family-photo-card" data-image="photos/family.jpg">
+          <img src="photos/family.jpg" alt="Your Beautiful Family" loading="lazy">
+        </div>
+      </div>
+
+      <div class="family-message">
+        <p>I searched everywhere for a beautiful family picture of yours, but couldn't find the one. So I decided to create it by myself—with a little help from AI.</p>
+        <p>I made this for you—Because when I think of you, I think of the people who shaped the kind, strong and amazing person you are—Every hug, every lesson, every quiet sacrifice from them lives within you.</p>
+        <p>It's in the way you listen without judgment, in the way you make others feel safe, and in the way you turn even the smallest moments into something worth remembering. And that's what makes having you in my life something I'll always be thankful for💞</p>
+      </div>
+    </div>
+
+    <!-- Friends Section -->
+    <div class="friends-section">
+      <div class="friends-header">
+        <h2>Your Amazing Friend 👬</h2>
+      </div>
+      
+      <div class="friends-photo-container">
+        <div class="friends-photo-card" data-image="photos/friend.jpg">
+          <img src="photos/friend .jpg" alt="Your Amazing Friend" loading="lazy">
+        </div>
+      </div>
+
+      <div class="friends-message">
+        <p>He is not just a friend — but a brother you chose👬🤌</p>
+        <p>Your partner in crime🤝</p>
+        <p>From silly jokes to serious talks — you've seen it all together 🤗</p>
+        <p>The OG bestie — through thick and thin🧿💝</p>
+        <p>You guys have a kind of bond that doesn't need many words 🫶🏻</p>
+        <p>Keep him in your life always 🪄</p>
+      </div>
+    </div>
+
+    <!-- Special Video Section -->
+    <div class="video-section">
+      <div class="video-header">
+        <h2>A Special Message For You 💕</h2>
+      </div>
+      
+      <div class="video-container">
+        <div class="video-card">
+          <video controls preload="metadata">
+            <source src="photos/Bdboy.mp4" type="video/mp4">
+            <!-- <source src="photos/special-video.webm" type="video/webm"> -->
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <div class="video-message">
+        <p>Some people come into your life and change everything without even trying.</p>
+        <p>You did that for me🫂</p>
+        <p>No one can ever take your place in my life — not now, not ever.</p>
+        <p>You're too special, too rare, too deeply loved💞</p>
+        <p>You're not just a friend — you're the piece of my heart I didn't know I was missing.</p>
+        <p>Every laugh we share, every little moment, feels like home 🏠</p>
+        <p>You mean more to me than words can ever hold.</p>
+        <p>you became my comfort, my chaos, and my calm all at once🥹</p>
+        <p>You’re my favorite person, my safe space, my chosen home in this messy world 🌎</p>
+        <p>Even if the world turns its back on you,
+I’ll still be here, loving you with the same heart —
+And I promise, no matter what life throws at you…
+I’ll be right here...
+I hope you remember — you have me👫
+</p>
+<p>You’re not replaceable.
+You’re not ‘just someone.’
+You’re the kind of soul I found once and decided to love forever.
+I’ll never leave. I’ll never stop caring.
+You’re my person — in every season🌸
+</p>
+<p>Having you in my life is my favorite kind of miracle🧿</p>
+
+      </div>
+    </div>
+
+    <!-- College Friends Video Section -->
+    <div class="college-video-section">
+      <div class="college-video-header">
+        <h2>College Memories & Friends 🎓✨</h2>
+      </div>
+      
+      <div class="college-video-container">
+        <div class="college-video-card">
+          <video controls preload="metadata">
+            <source src="photos/vide2.mp4" type="video/mp4">
+            <!-- <source src="photos/college-friends-video.webm" type="video/webm"> -->
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+
+      <div class="college-video-message">
+        <p>Every frame, every smile, every memory —</p>
+        <p>I created this with all my heart, just for you.</p>
+        <p>A small surprise, featuring all your college friends.</p>
+        <p>"I poured my time, love, and a thousand emotions into this.</p>
+        <p>From the first clip to the final smile —</p>
+        <p>I put a lot of love in every second.</p>
+        <p>From collecting moments to connecting memories —</p>
+        <p>You deserve to feel loved like this."</p>
+        <p>I hope you feel seen, celebrated, and loved.</p>
+        <p>I really hope this makes you smile🌸</p>
+      </div>
+    </div>
+
+    <!-- Bottom Message -->
+    <div class="bottom-message">
+      <p>These precious moments remind us that the most beautiful memories are made of love, laughter, and the simple joy of growing up surrounded by care 💕</p>
+    </div>
+  </div>
+ <button class="next-btn" onclick="nextPage()">Next</button>
+  <!-- Zoom Overlay -->
+  <div id="imgOverlay" class="img-overlay">
+    <span class="close-btn">&times;</span>
+    <img id="overlayImg" src="" alt="Zoomed photo">
+  </div>
+  
+  <footer>
+    Made with Love❤️
+  </footer>
+
+  <script>
+    function nextPage() {
+    window.location.href = "thankyou.html"; // redirects to thankyou.html page
+  }
+    // Photo zoom functionality
+    const photoCards = document.querySelectorAll('.photo-card, .family-photo-card, .friends-photo-card');
+    const overlay = document.getElementById('imgOverlay');
+    const overlayImg = document.getElementById('overlayImg');
+    const closeBtn = document.querySelector('.close-btn');
+
+    photoCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const imageSrc = card.dataset.image;
+        overlayImg.src = imageSrc;
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling
+      });
+    });
+
+    // Close overlay functionality
+    const closeOverlay = () => {
+      overlay.classList.remove('show');
+      document.body.style.overflow = 'auto'; // Restore scrolling
+    };
+
+    closeBtn.addEventListener('click', closeOverlay);
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        closeOverlay();
+      }
+    });
+
+    // Keyboard support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('show')) {
+        closeOverlay();
+      }
+    });
+
+    // Add loading animation
+    const images = document.querySelectorAll('.photo-card img, .family-photo-card img, .friends-photo-card img');
+    images.forEach(img => {
+      img.addEventListener('load', () => {
+        img.style.opacity = '1';
+      });
+      
+      img.style.opacity = '0';
+      img.style.transition = 'opacity 0.5s ease';
+    });
+  </script>
+
+</body>
+</html>

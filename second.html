@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Surprise Part 3 — Custom Cake</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+ <style>
+    :root{
+      --bg-dark:#111;
+      --bg-light-1:#fff7c0;
+      --bg-light-2:#ffffff;
+      --accent:#ff6b9a;
+      --card-bg: linear-gradient(180deg,#fff,#fff5f7);
+    }
+
+    html,body{height:100%;margin:0;padding:0;box-sizing:border-box}
+    *,*::before,*::after{box-sizing:inherit}
+
+    body {
+      text-align: center;
+      font-family: "Arial", sans-serif;
+      margin: 0;
+      padding: 20px 10px 60px;
+      overflow-x: hidden;
+      background: var(--bg-dark);
+      color: #fff;
+    }
+
+    #title {
+      display: none;
+      font-size: 34px;
+      margin: 8px 0 14px;
+      letter-spacing: 1px;
+      color: #ffdde1;
+      text-shadow: 0 6px 20px rgba(255, 120, 150, 0.15);
+    }
+
+    #lightBtn {
+      padding: 12px 28px;
+      font-size: 18px;
+      border: none;
+      border-radius: 28px;
+      cursor: pointer;
+      background-color: blue;
+      color: white;
+      margin: 8px auto 18px;
+    }
+
+    /* Balloons animation */
+    .balloon {
+      position: absolute;
+      bottom: -150px;
+      width: 60px;
+      height: 80px;
+      background-color: red;
+      border-radius: 50%;
+      animation: float 8s infinite;
+      opacity: 0.9;
+      z-index: 8;
+    }
+    .balloon::after {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      width: 2px;
+      height: 20px;
+      background: #555;
+      transform: translateX(-50%);
+    }
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-110vh) scale(1.1); opacity: 0; }
+    }
+
+    /* Cake container */
+    #cakeContainer {
+      display: none;
+      position: relative;
+      margin: 24px auto;
+      width: min(92vw, 420px);
+      z-index: 3;
+    }
+
+    /* SVGs are responsive */
+    #cakeSvg, #cakeCutSvg {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 10px 25px rgba(0,0,0,0.35));
+      display:block;
+    }
+    #cakeCutSvg { display: none; }
+
+    /* Flame flicker + out */
+    .flame { transform-origin: center; animation: flicker 0.18s infinite alternate; }
+    @keyframes flicker { from { transform: scale(1); opacity: .95 } to { transform: scale(1.15); opacity: .7 } }
+    .flame.out { animation: none; opacity: 0; }
+
+    /* Smoke puffs when a candle is blown */
+    .smoke { opacity: .8; animation: rise 1.2s ease-out forwards; }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(.8); opacity: .9 }
+      70%{ transform: translateY(-22px) scale(1); opacity: .5 }
+      100%{ transform: translateY(-36px) scale(1.1); opacity: 0 }
+    }
+
+    /* Candle hide animation */
+    .hide-candle { transform-origin: center; animation: shrinkOut 420ms ease forwards; }
+    @keyframes shrinkOut { 0%{transform:scale(1);opacity:1} 100%{transform:scale(.2) translateY(14px);opacity:0} }
+
+    /* Cake cutting shake */
+    .cut { animation: cutCake 550ms ease-in-out 1; }
+    @keyframes cutCake {
+      0% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-1.3deg) scale(0.99); }
+      50% { transform: rotate(1deg) scale(0.985); }
+      100% { transform: rotate(0) scale(1); }
+    }
+
+    /* small responsive tweaks */
+    @media (max-width:420px) {
+      #title { font-size: 26px; }
+      #lightBtn { font-size: 16px; padding: 10px 20px; }
+    }
+
+    /* OVERLAY PAGES */
+    .overlay-page {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      background: radial-gradient(circle at 10% 10%, rgba(255,255,255,0.06), rgba(0,0,0,0.65));
+      backdrop-filter: blur(4px);
+      padding: 28px;
+      overflow-y: auto;
+    }
+
+    /* MESSAGE PAGE (after cake cut) */
+    #messagePage .message-card {
+      width: min(920px, 96vw);
+      max-height: 86vh;
+      overflow: auto;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45), 0 6px 20px rgba(0,0,0,0.25);
+      background: linear-gradient(180deg, rgba(255,250,253,1), rgba(255,243,246,1));
+      color: #111;
+      text-align: left;
+      border: 1px solid rgba(255, 200, 215, 0.6);
+      position: relative;
+      transform: translateY(12px);
+      animation: cardIn 420ms cubic-bezier(.2,.9,.2,1);
+    }
+    @keyframes cardIn { from{transform:translateY(26px) scale(.98);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
+
+    .message-header { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+    .heart { width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; background: linear-gradient(135deg,#ff9ab8,#ff6b9a); color:#fff; box-shadow: 0 8px 24px rgba(255,107,154,0.28); }
+    .message-title { font-size:20px; font-weight:700; margin:0; color:#c32a5e; }
+
+    .message-content { font-size:15px; line-height:1.6; color:#222; white-space:pre-wrap; margin-top:10px; padding-right:8px; }
+
+    .message-footer { margin-top:18px; display:flex; gap:10px; align-items:center; justify-content:flex-end; }
+    .btn-ghost { padding:10px 16px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); background:transparent; cursor:pointer; font-weight:600; }
+    .btn-primary { padding:10px 16px; border-radius:10px; border:none; cursor:pointer; background:linear-gradient(90deg,#ff7aa3,#ff4f82); color:#fff; font-weight:700; }
+
+    @media (max-width:520px){
+      #messagePage .message-card { padding:18px; border-radius:12px; }
+      .heart { width:46px; height:46px; font-size:24px; }
+    }
+
+    /* CARDS PAGE */
+    #cardsPage .cards-wrap{
+      width:min(1100px,96vw);
+      margin:auto;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      animation: cardIn 420ms cubic-bezier(.2,.9,.2,1);
+    }
+    .cards-head{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      color:#111; background:linear-gradient(180deg,#fff,#fff5f7); border:1px solid rgba(255,200,215,.6);
+      border-radius:16px; padding:14px 16px; box-shadow:0 10px 30px rgba(0,0,0,.16);
+    }
+    .cards-title{font-size:18px;font-weight:800;color:#c32a5e;margin:0}
+    .cards-actions{display:flex;gap:10px}
+    .grid{
+      display:grid; gap:14px;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+    @media (max-width:900px){ .grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media (max-width:560px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      background:linear-gradient(180deg,#ffffff,#fff3f7);
+      border:1px solid rgba(255,200,215,.7);
+      border-radius:16px;
+      padding:18px;
+      text-align:left;
+      color:#111;
+      box-shadow:0 10px 30px rgba(0,0,0,.12);
+      cursor:pointer;
+      transition: transform .18s ease, box-shadow .18s ease;
+      min-height:120px;
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .card:hover{ transform: translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.18); }
+    .card h3{ margin:0 0 8px; font-size:18px; color:#c32a5e }
+    .card p{ margin:0; font-size:14px; color:#333 }
+
+    /* Modal for card details */
+    .modal{
+      position: fixed; inset:0; display:none; align-items:center; justify-content:center;
+      background: rgba(0,0,0,.5); z-index:50; padding:20px;
+    }
+    .modal-card{
+      width:min(720px,92vw); background:#fff; color:#111; border-radius:14px; padding:18px;
+      border:1px solid #ffd6e4; box-shadow:0 20px 70px rgba(0,0,0,.35);
+      max-height:80vh; overflow:auto;
+      animation: cardIn .35s ease;
+    }
+    .modal-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+    .modal-title{ font-weight:800; color:#c32a5e; margin:0 }
+    .close-x{ background:transparent; border:none; font-size:22px; cursor:pointer }
+
+    /* Modal Body Scroll */
+    .modal-body {
+      max-height: 60vh;   /* keeps popup from getting too tall */
+      overflow-y: auto;   /* adds scroll if content is long */
+      white-space: pre-line; /* keeps line breaks from JS string */
+      padding-right: 8px; /* space for scrollbar */
+    }
+
+    /* Center and style card titles */
+    .card h3 {
+      text-align: center;
+      font-weight: 800;
+      font-size: 1.3rem;
+      margin: 0 auto 10px;
+      color: #c32a5e;
+    }
+
+    /* FIXED REASONS BUTTONS */
+    .reasons-buttons {
+      display: flex;
+      flex-wrap: wrap;       
+      gap: 12px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .reasons-buttons button {
+      flex: 0 1 auto;        /* allow wrapping */
+      padding: 10px 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff7eb3, #ff758c);
+      color: white;
+      transition: transform 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+
+    .reasons-buttons button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
+    .reasons-buttons button:active {
+      transform: scale(0.95);
+    }
+
+    .reason-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+
+    .reason-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .reason-content p {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .close-reason {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .reason-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 650px;   /* increased width so multiple buttons fit */
+  width: 100%;
+  position: relative;
+}
+
+.reasons-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.reasons-buttons button {
+  flex: 0 1 calc(33.333% - 12px); /* 3 buttons per row */
+  min-width: 160px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff7eb3, #ff758c);
+  color: white;
+  transition: transform 0.2s, box-shadow 0.2s;
+  white-space: normal; /* allow wrapping inside button */
+}
+
+.reasons-buttons button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+.wish-image {
+  margin-top: 5px;
+  text-align: center ;
+}
+
+.wish-image img {
+ max-width: 400px;   /* set the max size */
+  height: 350px;
+  border-radius: 12px;
+  display: block;
+  margin: 20px auto;
+
+}
+.modal-body {
+  font-family: 'lobster',  sans-serif; /* modern clean font */
+  font-size: 16px;       
+  font-weight: 500;     
+  line-height: 1.8;      
+  color: #333;          
+  text-align: center;    
+}
+.modal-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #222;
+}
+.special-modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000; /* full black screen */
+  color: #fff;
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px;
+}
+
+.special-content {
+  max-width: 700px;
+  font-family: 'Poppins', sans-serif; /* or Quicksand */
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.8;
+}
+
+.close-btn {
+  margin-top: 1px;
+  background: #fff;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.close-btn:hover {
+  background: #ff69b4;
+  color: #fff;
+}
+/* mirror */
+.mirror-frame {
+  margin-bottom: 5px; /* spacing between mirror and message */
+  margin-top: 0;
+}
+
+.mirror-frame img {
+  width: 100%;
+  max-width: 405px;
+  display: block;
+  margin: 0 auto;
+}
+
+.mirror-message {
+  margin-top: 0;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width:900px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width:560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  min-height: 150px;   /* same size for all */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+
+
+</style>
+
+</head>
+<body>
+  <div id="title">🎉 Happy Birthday! 🎂</div>
+  <button id="lightBtn">Lights On</button>
+
+  <!-- Hidden audio element (optional, keep audio file in same folder) -->
+  <audio id="birthdaySong" src="happy-birthday-357371.mp3"></audio>
+
+  <div id="banner">
+    <div id="cakeContainer">
+      <!-- Uncut cake SVG -->
+      <svg id="cakeSvg" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Birthday cake with candles">
+        <ellipse cx="180" cy="230" rx="120" ry="15" fill="#e8e8e8"/>
+        <rect x="60" y="120" width="240" height="80" rx="15" fill="#ffd1dc"/>
+        <rect x="70" y="110" width="220" height="30" rx="12" fill="#fff4f4"/>
+        <path d="M70 130
+                 C85 145,95 135,105 130
+                 C115 150,130 140,140 130
+                 C150 152,165 138,175 130
+                 C185 147,200 138,210 130
+                 C220 150,235 138,245 130
+                 C255 148,270 140,290 130
+                 L290 140 L70 140 Z" fill="#ffe6ee"/>
+        <rect x="50" y="200" width="260" height="12" rx="6" fill="#f4f4f4" stroke="#dddddd"/>
+
+        <!-- Candle groups (each is a <g> with data-id) -->
+        <g class="candle" data-id="1" transform="translate(135,85)" style="cursor:pointer">
+          <rect class="stick" x="0" y="20" width="14" height="45" rx="3" fill="#ffc48c" />
+          <rect x="6" y="12" width="2" height="10" fill="#222"/>
+          <ellipse class="flame" cx="7" cy="8" rx="6" ry="9" fill="url(#flameGrad)"/>
+        </g>
+
+        <g class="candle" data-id="2" transform="translate(173,82)" style="cursor:pointer">
+          <rect class="stick" x="0" y="20" width="14" height="48" rx="3" fill="#a8e6cf" />
+          <rect x="6" y="12" width="2" height="10" fill="#222"/>
+          <ellipse class="flame" cx="7" cy="8" rx="6" ry="9" fill="url(#flameGrad)"/>
+        </g>
+
+        <g class="candle" data-id="3" transform="translate(211,87)" style="cursor:pointer">
+          <rect class="stick" x="0" y="20" width="14" height="43" rx="3" fill="#ffd3b6" />
+          <rect x="6" y="12" width="2" height="10" fill="#222"/>
+          <ellipse class="flame" cx="7" cy="8" rx="6" ry="9" fill="url(#flameGrad)"/>
+        </g>
+
+        <!-- small confetti -->
+        <circle cx="95" cy="115" r="2.2" fill="#ff8b94"/>
+        <circle cx="120" cy="118" r="2.2" fill="#a8e6cf"/>
+        <circle cx="240" cy="116" r="2.2" fill="#ffd3b6"/>
+        <circle cx="265" cy="119" r="2.2" fill="#ff8b94"/>
+
+        <defs>
+          <radialGradient id="flameGrad" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="yellow"/>
+            <stop offset="70%" stop-color="orange"/>
+            <stop offset="100%" stop-color="rgba(255,165,0,0)"/>
+          </radialGradient>
+          <radialGradient id="smokeGrad" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="rgba(200,200,200,0.9)"/>
+            <stop offset="100%" stop-color="rgba(200,200,200,0)"/>
+          </radialGradient>
+        </defs>
+      </svg>
+
+      <!-- Cut cake SVG (shown after cutting) -->
+      <svg id="cakeCutSvg" viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cake after cutting, slice removed">
+        <ellipse cx="180" cy="230" rx="120" ry="15" fill="#e8e8e8"/>
+        <rect x="60" y="120" width="240" height="80" rx="15" fill="#ffd1dc"/>
+        <rect x="70" y="110" width="220" height="30" rx="12" fill="#fff4f4"/>
+        <path d="M70 130
+                 C85 145,95 135,105 130
+                 C115 150,130 140,140 130
+                 C150 152,165 138,175 130
+                 C185 147,200 138,210 130
+                 C220 150,235 138,245 130
+                 C255 148,270 140,290 130
+                 L290 140 L70 140 Z" fill="#ffe6ee"/>
+        <rect x="50" y="200" width="260" height="12" rx="6" fill="#f4f4f4" stroke="#dddddd"/>
+
+        <!-- slice removed appearance: draw slice aside -->
+        <g transform="translate(300,175) rotate(-8)">
+          <path d="M0 0 L26 18 L26 36 L0 18 Z" fill="#ffd1dc" stroke="#eaa9b7"/>
+          <rect x="2" y="-8" width="22" height="12" rx="4" fill="#fff4f4"/>
+        </g>
+
+        <!-- fallen little candle remnants -->
+        <rect x="115" y="202" width="16" height="6" rx="3" fill="#ffc48c"/>
+        <rect x="210" y="202" width="16" height="6" rx="3" fill="#a8e6cf"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- MESSAGE PAGE -->
+  <div id="messagePage" class="overlay-page" aria-hidden="true">
+    <div class="message-card" role="dialog" aria-modal="true" aria-labelledby="msgTitle">
+      <div class="message-header">
+        <div class="heart">❤</div>
+        <div>
+          <div id="msgTitle" class="message-title">Happy Birthday, my precious human ❤</div>
+          <small style="color:#6b2c48">Today the stars are celebrating you</small>
+        </div>
+      </div>
+
+      <div class="message-content" id="messageText">
+
+
+The world got brighter— because you were born✨ You turn ordinary moments into magic🔮, love deeply, laugh loudly, and make everyone feel seen 💝
+
+You’re more than a friend — you’re my calm, my safe space, my home in human form🏡. You’ve carried so much, yet you still give with your whole soul😇
+I hope today reminds you how deeply loved you are — not for what you do, but for who you are. You’re magic✨ You are worthy, You are loved. And no matter where life takes us, I’ll always be one call away 💖
+No matter how old you get , you'll always be my favourite person to celebrate.🫶🏻
+
+May this year bring you peace, lasting joy, and love that feels like home. You deserve the world 🌎
+Blow out the candles, make a wish, and believe with your whole heart — because I already believe in you more than words can say 🤗
+Thank you for being my person , my safe space, my everyday kind of magic🪄 
+
+I love you with my whole heart🫀 
+Once again Happy Birthday, my home in human form🏠🫂💝
+      </div>
+
+      <div class="message-footer">
+        <button id="closeMsg" class="btn-ghost" aria-label="Close message"></button>
+        <button id="nextPageBtn" class="btn-primary" aria-label="Next page with cards">Next →</button>
+       
+      </div>
+    </div>
+  </div>
+
+  <!-- CARDS PAGE (NEW) -->
+  <div id="cardsPage" class="overlay-page" aria-hidden="true">
+    <div class="cards-wrap" role="dialog" aria-modal="true" aria-labelledby="cardsTitle">
+      <div class="cards-head">
+        <h2 id="cardsTitle" class="cards-title">For You — with all my love 💖</h2>
+        <div class="cards-actions">
+          <button id="backToMsg" class="btn-ghost">← Back</button>
+          <button id="replayFromCards" class="btn-primary">Replay Surprise</button>
+        </div>
+      </div>
+
+      <div class="grid" id="cardsGrid">
+  <div class="card" data-card="wish">
+    <h3>Make a wish 💫</h3>
+  </div>
+
+  <div class="card" data-card="reasons" onclick="location.href='reasons.html'">
+    <h3>100 reasons why I love you ❤</h3>
+  </div>
+
+  <div class="card" data-card="moods" onclick="location.href='moods.html'">
+    <h3>For All Your Moods 🌙</h3>
+  </div>
+
+  <div class="card" data-card="reminders">
+    <h3>Reminders💌</h3>
+  </div>
+
+  <div class="card" data-card="special">
+    <h3>Look who’s special 🪞</h3>
+  </div>
+
+  <div class="card" data-card="letter" onclick="location.href='memories.html'">
+    <h3>Memories📷</h3>
+  </div>
+</div>
+
+
+ <!-- Make a Wish Modal -->
+<div id="wishModal" class="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 class="modal-title">🌟 Make a Wish</h2>
+      <button class="close-x" id="closeWish">&times;</button>
+    </div>
+    <div class="modal-body">
+      Close your eyes for a moment.
+      Take a deep breath.
+      Feel the stillness around you.
+      Now… make a wish.
+      Wish for something wild, or something soft.
+      Wish for healing. For peace. For someone to stay.
+      Wish for dreams you haven’t dared to say out loud.
+      Wish for a version of you that feels light, free, and full of joy.
+      And when you’re done…
+      Let it go into the universe — like a whispered prayer.
+      Because even if you don’t believe in magic,
+      I believe in you.
+      And sometimes, that’s enough to make wishes come true.
+      So make your wish.
+      And know — someone, somewhere (me) is wishing for your happiness too.
+      I’m wishing for your days to be light, your nights to be kind, and your dreams to find their way to you — slowly, gently and beautifully.💟
+
+<!-- Image at the bottom -->
+      <div class="wish-image">
+        <img src="make a wish.jpg" alt="Make a Wish" />
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Reminders Modal -->
+<div id="reminderModal" class="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 class="modal-title">💌 Reminders</h2>
+      <button class="close-x" id="closeReminder">&times;</button>
+    </div>
+    <div class="modal-body">
+      • You are amazing and I love you so so so much 🫶🏻
+      • The world is beautiful because you are in it 🌎 
+      • You're worthy of love and happiness 😊 
+      • You are so important to me, and you matter so much in this world 🫰🏻
+      • I'm so proud of you, I'm your number one supporter 🫡
+      • You're so strong. Keep doing your best way 🤞
+      • You can always tell me about your problems, I'll always be here for you 🫂
+      • No matter what, you deserve love, happiness, success, and more! 📈
+      • I care about you ✨
+      • You are loved today, tomorrow and forever 💝
+      • I love you 🫶🏻
+    </div>
+  </div>
+</div>
+<!-- Special Black Screen Modal -->
+<div id="specialModal" class="special-modal">
+  <div class="special-content">
+
+    <!-- Mirror frame image first -->
+    <div class="mirror-frame">
+      <img src="photos/mirror.jpg" alt="Mirror Frame">
+    </div>
+
+    <!-- Message moved below -->
+    <p class="mirror-message">
+      May this mirror always remind you how amazing you are. 
+      The real magic is not in the mirror, it’s in the boy it reflects. 
+      Look into this and remember — you're someone’s entire world. 🪞🧿
+    </p>
+
+    <button id="closeSpecial" class="close-btn">Close ✖</button>
+  </div>
+</div>
+
+
+
+  <script>
+    const body = document.body;
+    const btn = document.getElementById("lightBtn");
+    const song = document.getElementById("birthdaySong");
+    const banner = document.getElementById("banner");
+    const cakeContainer = document.getElementById("cakeContainer");
+    const cakeSvg = document.getElementById("cakeSvg");
+    const cakeCutSvg = document.getElementById("cakeCutSvg");
+    const title = document.getElementById("title");
+
+    const messagePage = document.getElementById("messagePage");
+    const closeMsgBtn = document.getElementById("closeMsg");
+    // const replayBtn = document.getElementById("replayBtn");
+    const nextPageBtn = document.getElementById("nextPageBtn");
+
+    const cardsPage = document.getElementById("cardsPage");
+    const backToMsg = document.getElementById("backToMsg");
+    const replayFromCards = document.getElementById("replayFromCards");
+
+    const cardModal = document.getElementById("cardModal");
+    const closeModal = document.getElementById("closeModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody  = document.getElementById("modalBody");
+
+    let step = 0;
+    let blownCandles = 0;
+    let balloonIntervalId = null;
+
+    function createBalloon() {
+      const balloon = document.createElement("div");
+      balloon.classList.add("balloon");
+      const colors = ["#ff6b6b", "#4d96ff", "#6be09b", "#ffd166", "#c084fc", "#ff9bd6", "#ffb86b"];
+      balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      balloon.style.left = Math.random() * (window.innerWidth - 80) + "px";
+      balloon.style.animationDuration = 5 + Math.random() * 5 + "s";
+      body.appendChild(balloon);
+      setTimeout(() => { try { balloon.remove(); } catch(e){} }, 10000);
+    }
+
+    // Setup click behavior for candles
+    function setupCandleClicks() {
+      const candles = cakeSvg.querySelectorAll(".candle");
+      candles.forEach(candle => {
+        candle.style.pointerEvents = "auto";
+        candle.addEventListener("click", function handleClick() {
+          if (candle.dataset.removed === "1") return;
+          candle.dataset.removed = "1";
+
+          const flame = candle.querySelector(".flame");
+          if (flame && !flame.classList.contains("out")) flame.classList.add("out");
+
+          // smoke
+          [{cx:9,cy:6,r:4},{cx:14,cy:2,r:3}].forEach(p=>{
+            const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+            c.setAttribute("cx", p.cx); c.setAttribute("cy", p.cy); c.setAttribute("r", p.r);
+            c.setAttribute("fill", "url(#smokeGrad)"); c.setAttribute("class", "smoke");
+            candle.appendChild(c); setTimeout(()=>{ try{ c.remove(); }catch(e){} },1200);
+          });
+
+          candle.classList.add("hide-candle");
+          setTimeout(()=>{ try{ candle.remove(); }catch(e){} },420);
+
+          blownCandles++;
+          if (blownCandles >= 3) {
+            setTimeout(() => {
+              btn.textContent = "Let's Cut the Cake 🎂";
+              btn.disabled = false;
+              step = 4;
+            }, 480);
+          }
+        }, { once: true });
+      });
+    }
+
+    // Button stage flow
+    btn.disabled = false;
+
+    btn.addEventListener("click", () => {
+      if (step === 0) {
+        body.style.background = "linear-gradient(to top right, var(--bg-light-1), var(--bg-light-2))";
+        body.style.color = "black";
+        btn.textContent = "Play Music!";
+        btn.style.backgroundColor = "hotpink";
+        step = 1;
+      } else if (step === 1) {
+        song.play().catch(()=>{});
+        btn.textContent = "Decorate 🎊";
+        step = 2;
+      } else if (step === 2) {
+        body.style.background = "#ffffff";
+        banner.style.display = "block";
+        cakeContainer.style.display = "block";
+        title.style.display = "block";
+        if (!balloonIntervalId) balloonIntervalId = setInterval(createBalloon, 800);
+        btn.textContent = "Blow the Candles 🕯️";
+        btn.disabled = true;
+
+     
+
+        step = 3;
+        setupCandleClicks();
+      } else if (step === 4) {
+        cakeSvg.classList.add("cut");
+        setTimeout(() => {
+          cakeSvg.style.display = "none";
+          cakeCutSvg.style.display = "block";
+          btn.textContent = "🎉 Cake Cut!";
+          btn.disabled = true;
+
+         // stop music after cake cut
+    song.pause();
+    song.currentTime = 0;
+
+          if (balloonIntervalId) { clearInterval(balloonIntervalId); balloonIntervalId = null; }
+
+          setTimeout(() => {
+            banner.style.filter = "blur(6px) saturate(0.98) contrast(0.98) brightness(1.02)";
+            banner.style.pointerEvents = "none";
+            messagePage.style.display = "flex";
+            messagePage.setAttribute("aria-hidden", "false");
+            messagePage.scrollTop = 0;
+          }, 650);
+
+        }, 560);
+      }
+    });
+
+    // Message page buttons
+    closeMsgBtn.addEventListener("click", () => {
+      messagePage.style.display = "none";
+      banner.style.filter = "";
+      banner.style.pointerEvents = "";
+      messagePage.setAttribute("aria-hidden", "true");
+    });
+
+    nextPageBtn.addEventListener("click", () => {
+      // open cards page
+      messagePage.style.display = "none";
+      messagePage.setAttribute("aria-hidden","true");
+      cardsPage.style.display = "flex";
+      cardsPage.setAttribute("aria-hidden","false");
+    });
+
+    // replayBtn.addEventListener("click", () => location.reload());
+
+    // Cards page actions
+   backToMsg.addEventListener("click", () => {
+  cardsPage.style.display = "none";
+  cardsPage.setAttribute("aria-hidden","true");
+  messagePage.style.display = "flex";
+  messagePage.setAttribute("aria-hidden","false");
+
+  // if we arrived here via second.html#cardsPage, remove the hash so Back behaves normally
+  if (location.hash === '#cardsPage') {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+});
+
+    replayFromCards.addEventListener("click", () => location.reload());
+
+// --- open cards overlay if URL has #cardsPage (deep link) ---
+function openCardsFromHash() {
+  if (!cardsPage) return;
+  cardsPage.style.display = "flex";
+  cardsPage.setAttribute("aria-hidden", "false");
+  // optional: reset scroll and focus inside overlay
+  cardsPage.scrollTop = 0;
+  const head = cardsPage.querySelector('.cards-head');
+  if (head && typeof head.focus === 'function') head.focus();
+}
+
+// run once on load (script likely at bottom, but this is safe)
+if (location.hash === '#cardsPage') openCardsFromHash();
+
+// also handle changes to the hash while page is open
+window.addEventListener('hashchange', () => {
+  if (location.hash === '#cardsPage') openCardsFromHash();
+});
+
+
+
+    // Accessibility niceties
+    btn.addEventListener("keyup", (e) => { if (e.key === "Enter" || e.key === " ") btn.click(); });
+
+    // Enable the button in step 3 after cake appears
+    const observer = new MutationObserver(() => {
+      if (getComputedStyle(cakeContainer).display !== "none" && step === 3) {
+        setTimeout(() => { btn.disabled = false; }, 500);
+      }
+    });
+    observer.observe(cakeContainer, { attributes: true, attributeFilter: ['style'] });
+
+
+// Wish card modal logic
+const wishCard = document.querySelector('[data-card="wish"]');
+const wishModal = document.getElementById("wishModal");
+const closeWish = document.getElementById("closeWish");
+
+wishCard.addEventListener("click", () => {
+  wishModal.style.display = "flex";
+});
+
+closeWish.addEventListener("click", () => {
+  wishModal.style.display = "none";
+});
+
+// close if clicked outside modal
+window.addEventListener("click", (e) => {
+  if (e.target === wishModal) {
+    wishModal.style.display = "none";
+  }
+});
+  
+
+// ===== Reminders Modal =====
+const reminderCard = document.querySelector('.card[data-card="reminders"]');
+const reminderModal = document.getElementById("reminderModal");
+const closeReminder = document.getElementById("closeReminder");
+
+reminderCard.addEventListener("click", () => {
+  reminderModal.style.display = "flex";   // open
+});
+
+closeReminder.addEventListener("click", () => {
+  reminderModal.style.display = "none";   // close
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === reminderModal) {
+    reminderModal.style.display = "none"; // click outside closes
+  }
+});
+// ===== Special Card Modal =====
+const specialCard = document.querySelector('.card[data-card="special"]');
+const specialModal = document.getElementById("specialModal");
+const closeSpecial = document.getElementById("closeSpecial");
+
+specialCard.addEventListener("click", () => {
+  specialModal.style.display = "flex"; // show black screen
+});
+
+closeSpecial.addEventListener("click", () => {
+  specialModal.style.display = "none"; // close when button clicked
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === specialModal) {
+    specialModal.style.display = "none"; // click outside to close
+  }
+});
+
+
+
+
+  </script>
+ 
+
+
+
+</body>
+</html>

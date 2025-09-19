@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>100 Reasons Why I Love You</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --bg-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      --text-dark: #2d3748;
+      --white: #ffffff;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    html, body {
+      height: 100%; margin: 0; font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: var(--bg-gradient);
+      display: flex; min-height: 100vh; color: var(--text-dark);
+    }
+
+    /* Desktop Sidebar */ 
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+      padding: 30px 20px;
+      border-radius: 0 25px 25px 0;
+      box-shadow: 4px 0 25px rgba(102, 126, 234, 0.15);
+      display: flex; flex-direction: column; gap: 12px;
+      overflow-y: auto;
+    }
+    .sidebar h2 {
+      font-size: 24px; font-weight: 700; margin-bottom: 25px;
+      color: white; text-align: center;
+    }
+    .sidebar button {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 15px; 
+      color: white;
+      font-size: 15px; font-weight: 500;
+      padding: 15px 20px; cursor: pointer;
+      transition: all 0.3s ease; text-align: left;
+    }
+    .sidebar button:hover {
+      transform: translateX(8px) scale(1.02);
+      background: rgba(255,255,255,0.25);
+      box-shadow: 0 8px 25px rgba(255,255,255,0.2);
+    }
+
+    /* Mobile Menu Button (hidden on desktop) */
+    .mobile-menu-btn {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 1001;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+    .mobile-menu-btn:hover {
+      transform: scale(1.05);
+    }
+
+    /* Mobile Overlay Menu */
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .mobile-overlay.active {
+      opacity: 1;
+    }
+
+    .mobile-menu {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 30px 25px;
+      width: 90%;
+      max-width: 400px;
+      max-height: 80vh;
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+    }
+    .mobile-overlay.active .mobile-menu {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .mobile-menu h2 {
+      color: white;
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .mobile-menu button {
+      width: 100%;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 16px 20px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    .mobile-menu button:hover, .mobile-menu button:active {
+      background: rgba(255,255,255,0.25);
+      transform: scale(1.02);
+    }
+
+    .close-menu {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    .close-menu:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.1);
+    }
+
+    /* Content Area */
+    .content { 
+      flex: 1; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      padding: 40px; 
+    }
+    #messageArea {
+      background: rgba(255,255,255,0.95);
+      border-radius: 25px;
+      padding: 30px 35px;
+      max-width: 650px; 
+      max-height: 500px;
+      overflow-y: auto;
+      font-size: 18px; 
+      line-height: 1.7;
+      color: var(--text-dark);
+      box-shadow: var(--shadow);
+      width: 100%;
+    }
+    #messageArea::-webkit-scrollbar { width: 6px; }
+    #messageArea::-webkit-scrollbar-thumb {
+      background: var(--primary-gradient); 
+      border-radius: 3px;
+    }
+
+    /* List styling */
+    #messageArea.bond-list ol {
+      margin: 0; padding: 0; list-style: none;
+      counter-reset: love-counter;
+    }
+    #messageArea.bond-list ol li {
+      counter-increment: love-counter;
+      margin-bottom: 16px;
+      padding: 15px 18px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, rgba(102,126,234,0.08), rgba(240,147,251,0.08));
+      display: flex; align-items: center; gap: 15px;
+    }
+    #messageArea.bond-list ol li::before {
+      content: counter(love-counter);
+      background: var(--primary-gradient);
+      color: white; font-weight: 700;
+      font-size: 14px; border-radius: 50%;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Back Button */
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      z-index: 999;
+    }
+    .back-btn:hover {
+      background: #5a6fd8;
+      transform: scale(1.08);
+    }
+
+    /* ========== RESPONSIVE DESIGN ========== */
+    
+    /* Tablet adjustments */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 250px;
+        padding: 25px 18px;
+      }
+      .sidebar h2 { font-size: 22px; }
+      .sidebar button { font-size: 14px; padding: 14px 18px; }
+      .content { padding: 30px; }
+    }
+
+    /* Mobile breakpoint */
+    @media (max-width: 768px) {
+      /* Hide desktop sidebar */
+      .sidebar {
+        display: none;
+      }
+      
+      /* Show mobile menu button */
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      /* Show mobile overlay */
+      /* .mobile-overlay {
+        display: block;
+      } */
+      
+      /* Adjust content for mobile */
+      .content {
+        padding: 80px 20px 20px 20px; /* top padding for menu button */
+        width: 100%;
+      }
+      
+      #messageArea {
+        max-height: 70vh;
+        font-size: 16px;
+        padding: 25px;
+        border-radius: 20px;
+      }
+      
+      .back-btn {
+        bottom: 15px;
+        right: 15px;
+        padding: 10px 18px;
+        font-size: 14px;
+      }
+    }
+
+    /* Small mobile adjustments */
+    @media (max-width: 480px) {
+      .content {
+        padding: 80px 15px 15px 15px;
+      }
+      
+      #messageArea {
+        font-size: 15px;
+        padding: 20px;
+        max-height: 70vh;
+      }
+      
+      #messageArea.bond-list ol li {
+        padding: 12px 15px;
+        gap: 12px;
+        font-size: 14px;
+      }
+      
+      #messageArea.bond-list ol li::before {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+      }
+      
+      .mobile-menu {
+        width: 95%;
+        padding: 25px 20px;
+      }
+      
+      .mobile-menu h2 {
+        font-size: 20px;
+      }
+      
+      .mobile-menu button {
+        font-size: 15px;
+        padding: 14px 18px;
+      }
+      
+      .back-btn {
+        bottom: 10px;
+        right: 10px;
+        padding: 8px 16px;
+        font-size: 13px;
+      }
+    }
+
+    /* Very small phones */
+    @media (max-width: 360px) {
+      .content {
+        padding: 75px 10px 10px 10px;
+      }
+      
+      #messageArea {
+        font-size: 14px;
+        padding: 18px;
+      }
+      
+      .mobile-menu {
+        padding: 20px 15px;
+      }
+      
+      .mobile-menu button {
+        font-size: 14px;
+        padding: 12px 16px;
+      }
+    }
+    /* Mobile breakpoint */
+@media (max-width: 768px) {
+  #messageArea {
+    height: 70vh;           /* take 70% of viewport height */
+    overflow-y: auto;       /* force scroll if content overflows */
+    max-height: none;       /* remove cap that stops scrolling */
+  }
+}
+
+/* Small mobile adjustments */
+@media (max-width: 480px) {
+  #messageArea {
+    height: 75vh;           /* a bit taller on small phones */
+    overflow-y: auto;
+    max-height: none;
+  }
+}
+/* Mobile Overlay Menu */
+.mobile-overlay {
+  display: none;              /* default hidden */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
+  pointer-events: none;       /* don't block touches */
+}
+.mobile-overlay.active {
+  display: block;             /* only show when active */
+  opacity: 1;
+  pointer-events: auto;       /* now it can be clicked */
+}
+
+  </style>
+</head>
+<body>
+  <!-- Desktop Sidebar -->
+  <div class="sidebar">
+    <h2>💖 Reasons 💖</h2>
+    <button onclick="showMessage('bond')">Our Bond 💞</button>
+    <button onclick="showMessage('see')">The Way I See You 👀</button>
+    <button onclick="showMessage('think')">How You Think & Feel 💭</button>
+    <button onclick="showMessage('smile')">Things You Do That Matter 😊</button>
+    <button onclick="showMessage('kindness')">How You Communicate with Me 💕</button>
+    <button onclick="showMessage('strength')">Why I Trust You Completely</button>
+    <button onclick="showMessage('support')">The Way You Make Me Feel 🤝</button>
+    <button onclick="showMessage('dreams')">How You Love and Care✨</button>
+    <button onclick="showMessage('laugh')">Who You Are at Heart 😍</button>
+    <button onclick="showMessage('everything')">
+      What You Mean to Me <span style="font-size:16px; font-weight:600; color:white;">❤️</span>
+    </button>
+  </div>
+
+  <!-- Mobile Menu Button -->
+  <button class="mobile-menu-btn" onclick="openMobileMenu()">
+    📝 Reasons
+  </button>
+
+  <!-- Mobile Overlay Menu -->
+  <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu(event)">
+    <div class="mobile-menu">
+      <button class="close-menu" onclick="closeMobileMenu()">×</button>
+      <h2>💖 Choose a Reason 💖</h2>
+      <button onclick="showMessageAndClose('bond')">Our Bond 💞</button>
+      <button onclick="showMessageAndClose('see')">The Way I See You 👀</button>
+      <button onclick="showMessageAndClose('think')">How You Think & Feel 💭</button>
+      <button onclick="showMessageAndClose('smile')">Things You Do That Matter 😊</button>
+      <button onclick="showMessageAndClose('kindness')">How You Communicate with Me 💕</button>
+      <button onclick="showMessageAndClose('strength')">Why I Trust You Completely</button>
+      <button onclick="showMessageAndClose('support')">The Way You Make Me Feel 🤝</button>
+      <button onclick="showMessageAndClose('dreams')">How You Love and Care✨</button>
+      <button onclick="showMessageAndClose('laugh')">Who You Are at Heart 😍</button>
+      <button onclick="showMessageAndClose('everything')">What You Mean to Me ❤️</button>
+    </div>
+  </div>
+
+  <!-- Back Button -->
+  <button class="back-btn" onclick="goBack()">← Back to Cards</button>
+  
+  <!-- Content Area -->
+  <div class="content">
+    <div id="messageArea">💖 Click "Reasons" above to see why I love you 💖</div>
+  </div>
+
+  <script>
+    const messages = {
+      bond: [
+        "You're my best friend 💝",
+        "You're my home 🏡",
+        " You're the one who always tries to understand, even when I don't make sense  🥴",
+        "You're the person I can always count on 🫂",
+        "With you, I never have to pretend 🤥",
+        "You always Find the Right Word to calm Me 💫",
+        "You stood by me when others didn't 🫠",                
+        "You make even boring things fun 🤩",
+        "You treat my family like your own💖",
+        "You never ask me to be perfect 🌸"
+      ],
+      see: [
+        "You're very Handsome 🎀",
+        "Your voice calms my Overthinking 🧘🏻‍♀",
+        "Sitting behind you on your bike feels like the safest place 🏍",
+        "Your beard 🧿",
+        "You make me smile 😊",
+        "You make me feel beautiful 🫣",
+        "Your voice 🗣",
+        " Whenever  I send you pictures  of Princesses,You always choose me 💖",
+        "You love animals and kids 🐼🐷",
+        "You look  so peaceful when you're  just being yourself 😌"
+      ],
+      think: [
+        "You bring clarity to my confusion 😵‍💫",
+        "You understand emotions deeply🫰🏻",
+        "You believe in me when I don't believe in myself😇",
+        "You get excited about small things — like a good cup of tea☕",
+        "You know how to cheer me up🎉",
+        "Because you're patient with my moods✨",
+        "You have a heart full of galaxies🫀🌌",
+        "You have an energy that brings people together👯",
+        "You always find solutions 🔑",
+        "You capture the beauty of life without even trying📸 "
+      ],
+      smile: [
+        "You save things I send you, just because I sent them🫣",
+        "You share your dreams with me💭",
+        "You capture the best snap🦢",
+        "You once sent me a reel that said I'm more important to you than your bike — and that meant more to me than you'll ever know🥹",
+        "You made the best Maggi🍜🤤",
+        "You love the name 'Chintu' that I gave to your bike👉👈",
+        " You take  random selfies with me just to make memories🥲🤌",
+        "You record people🤳",
+        "You help without being asked🙌",
+        "You protect even when no one's watching🛡"
+      ],
+      kindness: [
+        "You listen to me👂",
+        " You remember the things I said once, long ago, like they mattered🥹",
+        "Because I can be 100% myself with you💞",
+        " You always know the right thing to say when I feel lost🥴",
+        "You challenge me to grow, kindly🛐",
+        " You understand me like no one else🫂",
+        "You help me to choose clothes💅",
+        "You fix things without making me feel incapable",
+        "You turn every ordinary place into a memory👌",
+        "You turn even mistakes into stories worth remembering💞"
+      ],
+      strength: [
+        "You trust me 🤞",
+        "You never let me face my problems alone🤝",
+        " You always support me, no matter what🥹",
+        "You understand emotions🫰🏻",
+        "You never judge my chaos 🫠",
+        " I trust you with my heart🥰",
+        "You never let me walk on the roadside of traffic 👫",
+        "You forgive me when I mess up🤬",
+        "We can spend hours talking about nothing and everything🫶🏻",
+        "You treat my problems like your own😌"
+      ],
+      support: [
+        "You're my safe space 🌌",
+        " You make hard conversation feel safe😊",
+        "You make sadness feel safe to express😌",
+        "You bring comfort just by being in the room😌🥰",
+        "You give comfort in ways no one else can🫂🤌",
+        " I feel safe with you — in ways I can't explain 🥲",
+        "You understand me, even in my messiness🫠",
+        "Because you respect me deeply🫶🏻",
+        "You remind me how strong I am🧚",
+        "You smell like peace 🕊"
+      ],
+      dreams: [
+        "You treat people with dignity, even when they don't deserve it🥲",
+        "You forgive quickly🤌",
+        " You give without expecting💯",
+        "You're patient with me😇",
+        "You always help others 😇",
+        " You treat my fears like they're important, not silly 🥺",
+        " You listen to my overthinking without getting annoyed🥰",
+        " You notice the things no one else sees👀",
+        "You protect my name behind my back🫶🏻",
+        "You say sorry without ego😗"
+      ],
+      laugh: [
+        "You are a beautiful person inside and out✨",
+        " You are the most genuine soul I've ever met✌",
+        "You have a heart that feels everything deeply🫶🏻",
+        "You shine even when you're tired✨",
+        " You're genuine in a world full of fakes🤌",
+        "You carry pain but never pass it on🫂",
+        " You admit when you're wrong🫠",
+        "You are made of strength and softness😇",
+        " You handle everything with grace😎",
+        "You never hesitate to stand up for what's right💪"
+      ],
+      everything: [
+        "You're the best thing that's ever happened to me🎁",
+        "You're my comfort zone🤗",
+        "You're worth everything🌎 ",
+        "You're my favorite hello and hardest goodbye🥹",
+        " You are my constant in an ever-changing world 🌎",
+        " You're my favorite notification👀",
+        "You're my reminder that good people still exist",
+        "You're the first person I think of when something happens🤌",
+        "Because when I'm with you, I forget how heavy life can be",
+        " I love you because you're you — and that's enough 💝"
+      ]
+    };
+   
+    const area = document.getElementById('messageArea');
+
+    function showMessage(key) {
+      if (!messages[key]) return;
+      const items = messages[key].map(line => `<li>${line}</li>`).join("");
+      area.innerHTML = `<ol>${items}</ol>`;
+      area.classList.add("bond-list");
+
+      // animation
+      area.animate([
+        { transform: 'translateY(20px)', opacity: 0 },
+        { transform: 'translateY(0)', opacity: 1 }
+      ], { duration: 400, easing: 'cubic-bezier(0.4,0,0.2,1)' });
+    }
+
+    function openMobileMenu() {
+      const overlay = document.getElementById('mobileOverlay');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+
+    function closeMobileMenu(event) {
+      // Only close if clicking on overlay background or close button
+      if (!event || event.target.classList.contains('mobile-overlay') || event.target.classList.contains('close-menu')) {
+        const overlay = document.getElementById('mobileOverlay');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto'; // Restore scrolling
+      }
+    }
+
+    function showMessageAndClose(key) {
+      showMessage(key);
+      closeMobileMenu();
+    }
+
+    function goBack() {
+      window.location.href = "second.html#cardsPage";
+    }
+
+    // Close mobile menu on escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeMobileMenu(event);
+      }
+    });
+  </script>
+</body>
+</html>

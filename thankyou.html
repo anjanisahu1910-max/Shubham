@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Thank You</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #fdf6f9;
+      font-family: Arial, sans-serif;
+    }
+    img {
+      max-width: 50%;
+      max-height: 50%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    /* Mobile view: make image bigger */
+    @media (max-width: 768px) {
+      img {
+        width: 95%;     /* increase size in mobile */
+        max-height: 95vh;
+      }
+    }
+  /* On very wide desktop screens, keep some margin */
+    @media (min-width: 1024px) {
+      img {
+        width: 90vw;
+        height: 90vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <img src="photos/Thankyou.jpg" alt="Thank You For Existing">
+</body>
+</html>

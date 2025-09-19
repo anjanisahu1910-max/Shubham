@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For All Your Moods 🌙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #fff3f7 0%, #fff7e6 100%);
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Desktop Layout */
+    .container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar - Desktop */
+    .sidebar {
+      width: 300px;
+      background: rgba(255, 235, 240, 0.9);
+      backdrop-filter: blur(10px);
+      padding: 25px 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.1);
+      overflow-y: auto;
+    }
+
+    .mood-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .mood-btn {
+      padding: 16px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mood-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .mood-btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* Button Gradients */
+    .mood-btn:nth-child(1) { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+    .mood-btn:nth-child(2) { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+    .mood-btn:nth-child(3) { background: linear-gradient(135deg, #f6d365, #fda085); }
+    .mood-btn:nth-child(4) { background: linear-gradient(135deg, #96e6a1, #d4fc79); }
+    .mood-btn:nth-child(5) { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+    .mood-btn:nth-child(6) { background: linear-gradient(135deg, #fccb90, #d57eeb); }
+    .mood-btn:nth-child(7) { background: linear-gradient(135deg, #fddb92, #d1fdff); }
+    .mood-btn:nth-child(8) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+    .mood-btn:nth-child(9) { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+    .mood-btn:nth-child(10) { background: linear-gradient(135deg, #cfd9df, #e2ebf0); }
+    .mood-btn:nth-child(11) { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+    .mood-btn:nth-child(12) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+    .mood-btn:nth-child(13) { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+    .mood-btn:nth-child(14) { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+    .mood-btn:nth-child(15) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+    }
+
+    .message-container {
+      max-width: 700px;
+      width: 100%;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease;
+      text-align: center;
+    }
+
+    .message-container.has-content {
+      text-align: left;
+    }
+
+    .message-text {
+      font-size: 18px;
+      line-height: 1.7;
+      color: #444;
+      white-space: pre-wrap;
+      margin-bottom: 20px;
+    }
+
+    .message-image {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      margin: 0 auto;
+      display: block;
+    }
+
+    .welcome-message {
+      font-size: 24px;
+      color: #666;
+      font-weight: 300;
+    }
+
+    .back-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      padding: 15px 25px;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 25px rgba(255, 154, 158, 0.4);
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255, 154, 158, 0.5);
+    }
+
+    /* Mobile Menu Elements - Hidden by default */
+    .mobile-header {
+      display: none;
+    }
+
+    .mobile-menu-overlay {
+      display: none;
+    }
+
+    .mobile-menu {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInFromLeft {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+
+    @keyframes fadeInOverlay {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      /* Mobile Header */
+      .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: rgba(255, 235, 240, 0.95);
+        backdrop-filter: blur(10px);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      }
+
+      .moods-btn {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(255, 154, 158, 0.3);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .moods-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 154, 158, 0.4);
+      }
+
+      .hamburger {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        cursor: pointer;
+        padding: 8px;
+      }
+
+      .hamburger span {
+        width: 25px;
+        height: 3px;
+        background: #ff9a9e;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+      }
+
+      .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+      }
+
+      .hamburger.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+      }
+
+      /* Mobile Menu Overlay */
+      .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 200;
+        animation: fadeInOverlay 0.3s ease;
+      }
+
+      .mobile-menu-overlay.show {
+        display: block;
+      }
+
+      /* Mobile Menu */
+      .mobile-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 85%;
+        max-width: 350px;
+        height: 100%;
+        background: white;
+        z-index: 300;
+        padding: 80px 20px 120px;
+        overflow-y: auto;
+        animation: slideInFromLeft 0.3s ease;
+      }
+
+      .mobile-menu.show {
+        display: block;
+      }
+
+      .mobile-menu-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .mobile-menu-title {
+        font-size: 24px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .mobile-mood-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .mobile-mood-btn {
+        padding: 16px 20px;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+        width: 100%;
+      }
+
+      .mobile-mood-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      }
+
+      /* Mobile Button Gradients */
+      .mobile-mood-btn:nth-child(1) { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+      .mobile-mood-btn:nth-child(2) { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+      .mobile-mood-btn:nth-child(3) { background: linear-gradient(135deg, #f6d365, #fda085); }
+      .mobile-mood-btn:nth-child(4) { background: linear-gradient(135deg, #96e6a1, #d4fc79); }
+      .mobile-mood-btn:nth-child(5) { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+      .mobile-mood-btn:nth-child(6) { background: linear-gradient(135deg, #fccb90, #d57eeb); }
+      .mobile-mood-btn:nth-child(7) { background: linear-gradient(135deg, #fddb92, #d1fdff); }
+      .mobile-mood-btn:nth-child(8) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+      .mobile-mood-btn:nth-child(9) { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
+      .mobile-mood-btn:nth-child(10) { background: linear-gradient(135deg, #cfd9df, #e2ebf0); }
+      .mobile-mood-btn:nth-child(11) { background: linear-gradient(135deg, #84fab0, #8fd3f4); }
+      .mobile-mood-btn:nth-child(12) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+      .mobile-mood-btn:nth-child(13) { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+      .mobile-mood-btn:nth-child(14) { background: linear-gradient(135deg, #ff9a9e, #fad0c4); }
+      .mobile-mood-btn:nth-child(15) { background: linear-gradient(135deg, #a1c4fd, #c2e9fb); }
+
+      .main-content {
+        padding: 20px;
+        min-height: calc(100vh - 80px);
+      }
+
+      .message-container {
+        padding: 25px 20px;
+        border-radius: 15px;
+        margin-bottom: 100px;
+      }
+
+      .message-text {
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .message-image {
+        max-width: 100%;
+        max-height: 300px;
+      }
+
+      .welcome-message {
+        font-size: 20px;
+      }
+
+      .back-btn {
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        border-radius: 15px;
+        text-align: center;
+        z-index: 50;
+      }
+    }
+
+    /* Small Mobile */
+    @media (max-width: 480px) {
+      .mobile-header {
+        padding: 12px 15px;
+      }
+
+      .moods-btn {
+        padding: 10px 20px;
+        font-size: 15px;
+      }
+
+      .mobile-menu {
+        width: 90%;
+        padding: 70px 15px 130px;
+      }
+
+      .mobile-menu-title {
+        font-size: 22px;
+      }
+
+      .mobile-mood-btn {
+        padding: 14px 16px;
+        font-size: 14px;
+      }
+
+      .main-content {
+        padding: 15px;
+      }
+
+      .message-container {
+        padding: 20px 15px;
+      }
+
+      .message-text {
+        font-size: 15px;
+      }
+
+      .welcome-message {
+        font-size: 18px;
+      }
+    }
+
+    /* Large Desktop */
+    @media (min-width: 1200px) {
+      .sidebar {
+        width: 320px;
+        padding: 30px 25px;
+      }
+
+      .mood-btn {
+        padding: 18px 22px;
+        font-size: 16px;
+      }
+
+      .main-content {
+        padding: 50px;
+      }
+
+      .message-container {
+        max-width: 800px;
+        padding: 50px;
+      }
+
+      .message-text {
+        font-size: 19px;
+        line-height: 1.8;
+      }
+    }
+
+    /* Focus and Accessibility */
+    .mood-btn:focus,
+    .mobile-mood-btn:focus,
+    .moods-btn:focus,
+    .back-btn:focus {
+      outline: 3px solid #4A90E2;
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Custom scrollbar */
+    .sidebar::-webkit-scrollbar,
+    .mobile-menu::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-track,
+    .mobile-menu::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb,
+    .mobile-menu::-webkit-scrollbar-thumb {
+      background: rgba(255,154,158,0.3);
+      border-radius: 10px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb:hover,
+    .mobile-menu::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,154,158,0.5);
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Header -->
+  <div class="mobile-header">
+    <button class="moods-btn" onclick="openMobileMenu()">
+      ✨ Moods
+    </button>
+    <div class="hamburger" onclick="openMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+      <h2 class="mobile-menu-title">Choose Your Mood 🌙</h2>
+    </div>
+    <div class="mobile-mood-buttons">
+      <button class="mobile-mood-btn" onclick="showMessage('smile'); closeMobileMenu();">Open when you need to smile 😊</button>
+      <button class="mobile-mood-btn" onclick="showMessage('angry'); closeMobileMenu();">Open when you're angry 😠</button>
+      <button class="mobile-mood-btn" onclick="showMessage('sad'); closeMobileMenu();">Open when you're sad 😢</button>
+      <button class="mobile-mood-btn" onclick="showMessage('tired'); closeMobileMenu();">Open when you need motivation ⚡</button>
+      <button class="mobile-mood-btn" onclick="showMessage('courage'); closeMobileMenu();">Open when you can't sleep 😴</button>
+      <button class="mobile-mood-btn" onclick="showMessage('lonely'); closeMobileMenu();">Open when you're stressed 🤯</button>
+      <button class="mobile-mood-btn" onclick="showMessage('excited'); closeMobileMenu();">Open when you're bored 🥲</button>
+      <button class="mobile-mood-btn" onclick="showMessage('stressed'); closeMobileMenu();">Open when you're doubting yourself 🪄</button>
+      <button class="mobile-mood-btn" onclick="showMessage('reassurane'); closeMobileMenu();">Open when you need Reassurance ✨</button>
+      <button class="mobile-mood-btn" onclick="showMessage('sick'); closeMobileMenu();">Open When You Are Sick 💪</button>
+      <button class="mobile-mood-btn" onclick="showMessage('hug'); closeMobileMenu();">Open when you need a hug 🫂</button>
+      <button class="mobile-mood-btn" onclick="showMessage('loved'); closeMobileMenu();">Open when you need to feel loved 💞</button>
+      <button class="mobile-mood-btn" onclick="showMessage('fight'); closeMobileMenu();">Open when we have a fight 😫</button>
+      <button class="mobile-mood-btn" onclick="showMessage('miss'); closeMobileMenu();">Open when you miss me 👀</button>
+      <button class="mobile-mood-btn" onclick="showMessage('dream'); closeMobileMenu();">Open when you want to know how much I love you 💞</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Desktop Sidebar -->
+    <div class="sidebar">
+      <div class="mood-buttons">
+        <button class="mood-btn" onclick="showMessage('smile')">Open when you need to smile 😊</button>
+        <button class="mood-btn" onclick="showMessage('angry')">Open when you're angry 😠</button>
+        <button class="mood-btn" onclick="showMessage('sad')">Open when you're sad 😢</button>
+        <button class="mood-btn" onclick="showMessage('tired')">Open when you need motivation ⚡</button>
+        <button class="mood-btn" onclick="showMessage('courage')">Open when you can't sleep 😴</button>
+        <button class="mood-btn" onclick="showMessage('lonely')">Open when you're stressed 🤯</button>
+        <button class="mood-btn" onclick="showMessage('excited')">Open when you're bored 🥲</button>
+        <button class="mood-btn" onclick="showMessage('stressed')">Open when you're doubting yourself 🪄</button>
+        <button class="mood-btn" onclick="showMessage('reassurane')">Open when you need Reassurance ✨</button>
+        <button class="mood-btn" onclick="showMessage('sick')">Open When You Are Sick 💪</button>
+        <button class="mood-btn" onclick="showMessage('hug')">Open when you need a hug 🫂</button>
+        <button class="mood-btn" onclick="showMessage('loved')">Open when you need to feel loved 💞</button>
+        <button class="mood-btn" onclick="showMessage('fight')">Open when we have a fight 😫</button>
+        <button class="mood-btn" onclick="showMessage('miss')">Open when you miss me 👀</button>
+        <button class="mood-btn" onclick="showMessage('dream')">Open when you want to know how much I love you 💞</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div id="messageContainer" class="message-container">
+        <div class="welcome-message">
+          ✨ Click "Moods" above to see your message ✨
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="backBtn" class="back-btn">← Back to Cards</button>
+
+  <script>
+    const messages = {
+      smile: {
+        text: `If you're reading this, maybe the world has forgotten to be gentle today.
+So let me be that gentleness for you — even for a moment.
+
+If your heart feels a little dull today… here's a tiny reminder: you are someone's favorite human.
+(That someone is me, obviously.)
+But just in case you forgot why your smile is one of my favorite things in the whole world… let me remind you: 
+- Your smile can turn my worst day around.
+•Because you're amazing.
+•Because you've made so many people happy — especially me.
+
+Now go look in the mirror and give yourself the softest, tiniest smile — and if that feels hard, just imagine me saying: Buggu aaj aap bahut Cute lg rhe h ek kissi de de aapko.
+And don't forget to send me your snap when you smile😚`,
+        image: "photos/smile.jpg"
+      },
+      angry: {
+        text: `"Open when you can't sleep 😴
+    Still tossing and turning? What's keeping your sweet little overthinking head awake tonight?
+
+Is it that one thing you said awkwardly three years ago? Or imaginary arguments? Or just your brain being dramatic for no reason?
+
+ I wish I could be there beside you — whispering nonsense, playing with your hair, or just lying in silence until your thoughts get quiet enough to let you rest.
+
+So the night feels a little too long tonight, doesn't it?
+Too many thoughts. Too much silence. Too many "what ifs" running in circles.
+
+
+And if sleep doesn't come, that's okay too.
+You're still doing fine.
+You're still loved — more than you know.
+
+I'm right here. Always.
+
+Now close your eyes, and if you can't sleep… just rest. That's enough.
+
+✅ You're not alone.
+✅ You're not a mess.
+✅ You don't need to have it all figured out.
+✅ You can always call me — even now. I'm probably awake, thinking about you."`,
+        image: "photos/angry.jpg"
+      },
+      sad: {
+        text: `"Open when you feel sad 🙂
+
+I don't like knowing that you're sad.
+Not because I expect you to always be happy — but because I care so much that your pain feels like mine too.
+
+I wish I could reach through this note and just pull you into a big, warm hug right now.
+Because sadness is heavy, and you shouldn't have to carry it all by yourself.
+
+Some days your heart just hurts —
+Without warning. Without reason.
+And you wonder if you're too much, or not enough, or maybe just lost in between.
+
+And I want you to remember this:
+You are not alone. Not now. Not ever.
+You're loved. You're needed. You're held — even from a distance.
+
+Take your time.
+I'm not going anywhere.No matter what time it is — late, early, or in between — just call or text me. I'll pick up. Always"`,
+        image: "photos/feelsad.jpg"
+      },
+      tired: {
+        text: `"Open when you need motivation ⚡
+
+If you're opening this, it means life feels a little heavy right now. Maybe you're tired. Maybe you're doubting yourself. Maybe the world feels like it's moving too fast and you're standing still.
+
+So pause. Breathe. And let me remind you of something important:
+
+You are capable. You are strong. And you are made for more than just surviving — you are made to shine.
+
+You're not behind. You're not broken.
+You're blooming in your own time.
+
+And I'll be here — every step, every season —
+reminding you: you are so much more than you know.
+
+Not every day has to be productive. Not every goal has to be hit today.
+Just existing, just trying, is already an act of quiet courage.
+
+Take one deep breath. Then take one more step.
+That's all you need right now.
+So don't give up, okay?
+
+Even when it's slow, you're still moving forward. Even when you feel lost, you're still on your way.
+
+I'm here, always cheering for you — louder than the world, and prouder than you know."`,
+        image: "photos/motiv.jpg"
+      },
+      courage: {
+        text: `"Open when you can't sleep 😴
+
+Still tossing and turning? What's keeping your sweet little overthinking head awake tonight?
+
+Is it that one thing you said awkwardly three years ago? Or imaginary arguments? Or just your brain being dramatic for no reason?
+
+ I wish I could be there beside you — whispering nonsense, playing with your hair, or just lying in silence until your thoughts get quiet enough to let you rest.
+
+So the night feels a little too long tonight, doesn't it?
+Too many thoughts. Too much silence. Too many "what ifs" running in circles.
+
+
+And if sleep doesn't come, that's okay too.
+You're still doing fine.
+You're still loved — more than you know.
+
+I'm right here. Always.
+
+Now close your eyes, and if you can't sleep… just rest. That's enough.
+
+✅ You're not alone.
+✅ You're not a mess.
+✅ You don't need to have it all figured out.
+✅ You can always call me — even now. I'm probably awake, thinking about you."`,
+        image: "photos/can't sleep.jpg"
+      },
+      lonely: {
+        text: `"Open when you're stressed 🤯
+
+If you're opening this, it means the weight of the world is sitting a little too heavy on your shoulders today. 
+
+You don't have to do everything all at once.
+You don't have to have it all figured out today.
+You don't have to be perfect to be worthy of love, rest, or peace.
+
+It's okay to let go of things that aren't in your control.
+
+I know you've been trying so hard, doing your best, pushing through even when you're exhausted. But — you deserve a break, too. You deserve softness. You deserve to be cared for, not just by others, but by yourself.
+
+And when it feels like too much, just call me. Don't think twice.
+
+You are doing better than you think.
+I'm proud of you — even now. Especially now🫂"`,
+        image: "photos/stressd .jpg"
+      },
+      excited: {
+        text: `"Open when you're bored 🥲
+
+Just call me — I'll always pick up. No matter when, no matter what."`,
+        image: "photos/Bored.jpg"
+      },
+      stressed: {
+        text: `"Open when you're doubting yourself 🪄
+
+I don't know what made you question yourself today — but I do know this: you are more capable, more worthy, and more beautiful than whatever made you forget.
+
+Let me say this clearly, from the deepest part of my heart:
+
+-You are enough.
+-You are brave.
+-You are my super man.
+
+I wish you could see yourself the way I see you .
+Borrow my words, my eyes, my love — until yours return.
+
+You are doing better than you think.
+And no matter how many times you fall into doubt,
+I will be here — always reminding you of your light.
+
+You are fire.
+You are capable.
+You are so much more powerful than you think."`,
+        image: "photos/doubtyourself.jpg"
+      },
+      reassurane: {
+        text: `"Open when you need Reassurance ✨
+
+I just want to remind you of a few things today…
+I love you. 💖
+You are doing so good, even when you don't see it yourself.
+You help everyone around you with your kind heart, and that makes you so, so special.
+You are God's favourite child—don't ever doubt that. ✨
+And above all, you are enough, exactly as you are.
+
+So whenever you feel low or unsure, come back to these words and know that I'll always be here, believing in you and loving you endlessly.
+
+And I want you to know that you are enough for me—always, in every way. Nothing could ever change how much I love you."`,
+        image: "photos/reassurance.jpg"
+      },
+      sick: {
+        text: `"Open When You Are Sick 💪
+
+I know you're not feeling well right now, and it breaks my heart to see you sick. Please don't go outside, don't do anything—just rest properly. Your health matters more than anything to me. 💕
+
+Take your medicine on time, eat light, drink enough water, and please take care of yourself. And if you ever feel like talking, call me anytime. No matter how angry I ever get, my anger will never be more important than your health. So please, don't stop yourself from calling me. Never think you'll disturb me. I know you feel like talking to me won't change much—but for me, being there for you means everything. I'm always available for you, in every moment. 💖
+
+I love you more than anything in this world, and I just want to see you healthy, safe, and smiling again. 🌸"`,
+        image: "photos/sick.jpg"
+      },
+      hug: {
+        text: `"Open when you need a hug 🫂
+If you're reading this, something's weighing on your heart — and I just want to say: I'm right here. Maybe not physically, but soul-to-soul, always.
+
+You're not alone."
+"You're stronger than this moment."
+
+Life can be a mess. People disappoint. Hearts breaks But I won't leave ever .You've got me — in every version of reality
+I'm so proud of the person you are, and I love you.So here's your virtual hug: safe, silent, and strong.
+
+Let yourself rest, breathe, and lean into this little moment.
+You're not alone, not now, not ever 🫂"`,
+        image: "photos/hug.jpg"
+      },
+      loved: {
+        text: `"Open when you need to feel loved 💞
+If you're reading this, it means your heart needs a little extra love right now — so here I am, pouring mine into these words, hoping they wrap around you like a soft blanket on a cold night.
+
+You are loved without needing to earn it, without needing to prove anything.
+You are not too much. You are not hard to love. You are exactly right for the kind of love that stays — and I promise you, mine will.
+
+So if the world ever makes you doubt your worth…
+If people forget to see your magic…
+Just come back to this moment, and let these words whisper what I would tell you if I were holding your hand:
+
+-You matter.
+-You're seen.
+-You're enough.
+-You are so incredibly loved🌸"`,
+        image: "photos/feellove.jpg"
+      },
+      fight: {
+        text: `"Open when we have a fight 😫
+
+I'm sorry.
+I know I said a bit too much in anger.
+I didn't mean any of it.
+
+And if you're thinking, "She's angry, I should give her some time, "please don't think like that.I'm just waiting for you to come and make things okay so we can talk a lot again.
+
+It's actually very easy to make me happy—
+just call me and talk to me.💕
+
+I know sometimes you're not sure how to handle my anger,
+so I'm telling you clearly.
+Now you can't say you don't know what to do! 💕
+
+1. Don't leave me alone when I'm upset.Please don't say, "Rest, we'll talk later."Keep talking until I calm down.
+
+2. Say sorry, and try to make sure the same thing doesn't happen again.
+
+3. Take me out and feed me my favourite food. 🍲
+
+4. Make maggi for me by yourself—it's the cutest way to melt my mood.
+
+5. If I ask you to meet,come and meet me. And sometimes, even without me asking, give me a surprise visit.
+
+6. Call me often and keep me updated about everything from morning till night. And don't ever say, "You don't know this or that person."
+
+7. Write me a long message when I'm angry, so I know I matter to you.
+
+8. You can even come outside my hostel and give me a little surprise💌
+
+9. Talk to me softly and with love— never in a harsh voice.
+
+10. And yes, sometimes even one chocolate is enough to make me forget my anger🍫
+
+Now you have my little list—
+follow it well, and I promise I'll melt every time.
+
+Because honestly, *I love you more than anyone else in this world.* 💖"`,
+        image: "photos/fight.jpg"
+      },
+      miss: {
+        text: `"Open when you miss me  👀
+
+If you're opening this, it means you miss me — and guess what? I miss you too… probably more than you can imagine.
+
+Right now, I want you to close your eyes for a second and imagine me there with you — smiling, talking nonstop, maybe teasing you a little, but never letting you feel alone. Because even when I'm not around, my love for you never leaves your side.
+
+You're not missing me alone — I'm missing you too."`,
+        image: "photos/missyou.jpg"
+      },
+      dream: {
+        text: `"Open when you want to know how much I love you 💞
+
+You are not just "someone I love." You are the love — my favorite person, my safe place, my forever. And even on days when I don't say it out loud a hundred times, know that my heart is always screaming it:
+I love you more than words will ever be able to hold🫶🏻"`,
+        image: "photos/i love you.jpg"
+      }
+    };
+
+    function showMessage(mood) {
+      const container = document.getElementById('messageContainer');
+      const message = messages[mood];
+      
+      if (message) {
+        container.innerHTML = `
+          <div class="message-text">${message.text}</div>
+          <img src="${message.image}" alt="${mood}" class="message-image">
+        `;
+        container.classList.add('has-content');
+      }
+    }
+
+    function openMobileMenu() {
+      const overlay = document.getElementById('mobileOverlay');
+      const menu = document.getElementById('mobileMenu');
+      const hamburger = document.querySelector('.hamburger');
+      
+      overlay.classList.add('show');
+      menu.classList.add('show');
+      hamburger.classList.add('active');
+      
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+      const overlay = document.getElementById('mobileOverlay');
+      const menu = document.getElementById('mobileMenu');
+      const hamburger = document.querySelector('.hamburger');
+      
+      overlay.classList.remove('show');
+      menu.classList.remove('show');
+      hamburger.classList.remove('active');
+      
+      // Restore body scroll
+      document.body.style.overflow = 'auto';
+    }
+
+    document.getElementById('backBtn').addEventListener('click', function() {
+      window.location.href = "second.html#cardsPage";
+    });
+
+    // Handle hash navigation
+    window.addEventListener("load", function() {
+      if (window.location.hash === "#cardsPage") {
+        document.getElementById("cardsPage")?.setAttribute("aria-hidden", "false");
+      }
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+      const menu = document.getElementById('mobileMenu');
+      const overlay = document.getElementById('mobileOverlay');
+      const moodsBtn = document.querySelector('.moods-btn');
+      const hamburger = document.querySelector('.hamburger');
+      
+      if (menu.classList.contains('show') && 
+          !menu.contains(e.target) && 
+          !moodsBtn.contains(e.target) && 
+          !hamburger.contains(e.target)) {
+        closeMobileMenu();
+      }
+    });
+
+    // Handle escape key to close menu
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeMobileMenu();
+      }
+    });
+  </script>
+</body>
+</html>

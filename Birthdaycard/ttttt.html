@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday 🎂</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(to top, #ffe0e9, #fff4f9);
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Banner */
+    .banner {
+      position: absolute;
+      top: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ff4081;
+    }
+
+    /* Balloons */
+    .balloon {
+      position: absolute;
+      bottom: -150px;
+      width: 50px;
+      height: 70px;
+      border-radius: 50%;
+      animation: float 6s infinite;
+    }
+    .balloon::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 50px;
+      background: #555;
+      top: 70px;
+      left: 50%;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) translateX(0); opacity: 1; }
+      100% { transform: translateY(-120vh) translateX(40px); opacity: 0; }
+    }
+
+    /* Cake container */
+    .cake-wrapper {
+      position: relative;
+      width: 220px;
+      height: 160px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    /* Cake base */
+    .cake {
+      position: relative;
+      width: 200px;
+      height: 140px;
+      background: linear-gradient(to top, #004f7c 0%, #0077b6 40%, #90e0ef 70%, #fff 100%);
+      border-radius: 50% / 15%;
+      box-shadow: inset 0 -8px 10px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    /* Cake top */
+    .cake::before {
+      content: "";
+      position: absolute;
+      top: -25px;
+      left: 0;
+      width: 200px;
+      height: 50px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+    }
+
+    /* Candle */
+    .candle {
+      position: absolute;
+      top: -70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 60px;
+      background: #87ceeb;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .flame {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      width: 20px;
+      height: 30px;
+      background: radial-gradient(circle, yellow 40%, orange 60%, transparent 70%);
+      border-radius: 50%;
+      transform: translateX(-50%);
+      animation: flicker 0.3s infinite alternate;
+    }
+
+    @keyframes flicker {
+      from { transform: translateX(-50%) scale(1); opacity: 1; }
+      to { transform: translateX(-50%) scale(1.1); opacity: 0.8; }
+    }
+
+    /* Slice (hidden initially) */
+    .slice {
+      display: none;
+      position: absolute;
+      width: 100px;
+      height: 140px;
+      background: linear-gradient(to top, #004f7c 0%, #0077b6 40%, #90e0ef 70%, #fff 100%);
+      border-radius: 0 0 50% 50% / 0 0 15% 15%;
+      box-shadow: inset 0 -8px 10px rgba(0,0,0,0.2);
+      top: 20px;
+      left: 55%;
+    }
+
+    .buttons {
+      position: absolute;
+      bottom: 40px;
+      text-align: center;
+    }
+
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #ff4081;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="banner">🎉 Happy Birthday 🎉</div>
+
+  <!-- Balloons -->
+  <div class="balloon" style="left:10%; background: pink; animation-delay:0s;"></div>
+  <div class="balloon" style="left:30%; background: skyblue; animation-delay:2s;"></div>
+  <div class="balloon" style="left:60%; background: lightgreen; animation-delay:4s;"></div>
+  <div class="balloon" style="left:80%; background: violet; animation-delay:1s;"></div>
+
+  <!-- Cake -->
+  <div class="cake-wrapper">
+    <div class="cake" id="cake">
+      <div class="candle" id="candle">
+        <div class="flame" id="flame"></div>
+      </div>
+    </div>
+    <!-- Cake Slice -->
+    <div class="slice" id="slice"></div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="buttons">
+    <button onclick="blowCandle()">Blow Candle</button>
+    <button onclick="cutCake()">Cut the Cake</button>
+  </div>
+
+  <script>
+    function blowCandle() {
+      document.getElementById("flame").style.display = "none";
+    }
+
+    function cutCake() {
+      document.getElementById("slice").style.display = "block";
+      document.getElementById("slice").style.animation = "sliceMove 1s forwards";
+    }
+
+    // Cake slice animation
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes sliceMove {
+        from { transform: translateX(0); opacity:1; }
+        to { transform: translateX(150px); opacity:1; }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

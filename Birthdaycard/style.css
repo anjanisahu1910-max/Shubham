@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffe6f2;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+#messageCard {
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  text-align: center;
+  max-width: 300px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+
+
+
+/* Black screen for surprise */
+.black-screen {
+  background: black;
+  color: white;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 2s ease;
+}
+
+/* Pill-shaped Lights On button */
+#lightBtn {
+   position: absolute;
+  top: 100px;        /* adjust distance from top */
+  left: 45%;
+  padding: 15px 60px;
+  font-size: 20px;
+  border: none;
+  border-radius: 999px;  /* makes it pill shaped */
+  background: #007bff;   /* blue color */
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+#lightBtn:hover {
+  transform: scale(1.05);
+  background: #0056b3;
+}
